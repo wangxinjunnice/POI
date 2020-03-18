@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.poi.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cn.poi.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="birthday" property="birthday" />
+        <result column="sex" property="sex" />
+        <result column="address" property="address" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, birthday, sex, address
+    </sql>
+
+    <!--批量插入，有则更新，没有直接插入-->
+    <insert id="insertByBatch" parameterType="List">
+        insert into `user`(username,birthday,sex,address)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.username},
+            #{item.birthday},
+            #{item.sex},
+            #{item.address}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        username=VALUES (username),
+        birthday=VALUES (birthday),
+        sex=VALUES (sex),
+        address=VALUES (address)
+    </insert>
+    <select id="listAll" resultMap="BaseResultMap">
+        select * from user
+    </select>
+
+</mapper>
