@@ -1,0 +1,17 @@
+1. 工作簿版本
+    HSSFWorkbook       -- 2003   表单存储量小 65530条左右 （基本不用）
+    XSSFWorkbook        --2007    数量大  可存百万条  (数量小时可使用)
+    SXSSFWorkbook      --2007    数量大  (数量大时可使用，处理百万级别数据使用该对象)
+
+2. 当数据量达到百万级时使用poi导入导出时会出现OOM问题(内存不足)
+    原因：当使用XSSFWorkbook工作簿时会先把数据读取到内存中单后在导出，这样当内存不足时会出现OOM问题
+
+3. 解决方式
+    a:  选工作簿SXSSFWorkbook
+    b:  SXSSFWorkbook sx=new SXSSFWorkbook(阈值)；
+         构造入参:rowAccessWindowSize(阈值) 
+         阈值默认是100，当内存中的数据达到阈值时会把数据以XML临时文件的形式存储到硬盘中这样就避免了内存不足问题
+
+  缺点：
+   a:  不能使用加载模板
+   b:  效率低于将数据加载到内存中的形式
